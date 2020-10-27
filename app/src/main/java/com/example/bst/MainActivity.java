@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText inputNumber = (EditText)findViewById(R.id.inputNumber);
         final Button pushButton = (Button)findViewById(R.id.pushNumber);
         final Button deleteButton = (Button)findViewById(R.id.deleteNumber);
-
+        inputNumber.setInputType(0);
         Integer[] Rid_button = {
             R.id.node0, R.id.node1, R.id.node2, R.id.node3, R.id.node4,
             R.id.node5, R.id.node6, R.id.node7, R.id.node8, R.id.node9,
@@ -61,16 +61,22 @@ public class MainActivity extends AppCompatActivity {
                         node_arr.remove(i);
                     }
                 }
-
                 Collections.sort(node_arr);
+                // 입력 값과 같은 노드를 삭제
+
+
+                // 리스트 트리에 맞게 배열에 넣기
 
                 for (int i = 0; i < node_arr.size(); i++) {
                     node[i].setText(String.valueOf(node_arr.get(i)));
                     if(i==node_arr.size()-1)
                         node[i+1].setText("");
                 }
+                // 트리에 넣기
+
                 if(node_arr.size() == 0)
                     node[0].setText("");
+                // 0번째 예외 처리
             }
         });
     }
