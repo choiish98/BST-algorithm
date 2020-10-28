@@ -64,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
 
     class Tree {
         class Node {
-            int data;
+            Integer data;
             Node left;
             Node right;
             Node() {
             }
-            Node (int data) {
+            Node (Integer data) {
                 this.data = data;
             }
         }
@@ -86,13 +86,17 @@ public class MainActivity extends AppCompatActivity {
             return node;
         }
         void bfs(ArrayList<Integer> arr) {
-            bfs(0, arr);
-        }
-        void bfs(int index, ArrayList<Integer> arr) {
             Queue<Node> queue = new Queue<Node>();
             queue.enqueue(root);
             while (!queue.isEmpty()) {
                 Node r = queue.dequeue();
+                Node null_node = new Node(null);
+                null_node.left = null;
+                null_node.right = null;
+                if(r.data == null) {
+                    arr.add(null);
+                    continue;
+                }
                 if(r.left != null) {
                     queue.enqueue(r.left);
                 }
@@ -100,17 +104,15 @@ public class MainActivity extends AppCompatActivity {
                     queue.enqueue(r.right);
                 }
                 if(r.left == null) {
-                    Node null_node = new Node();
                     queue.enqueue(null_node);
                 }
-                if(r.left == null) {
-                    Node null_node = new Node();
+                if(r.right == null) {
                     queue.enqueue(null_node);
                 }
                 visit(r.data, arr);
             }
         }
-        void visit (int n, ArrayList < Integer > arr){
+        void visit (Integer n, ArrayList < Integer > arr){
             arr.add(n);
         }
     }
@@ -156,9 +158,14 @@ public class MainActivity extends AppCompatActivity {
 
                 ArrayList<Integer> gui_arrlist = new ArrayList<Integer>();
                 t.bfs(gui_arrlist);
+                for(int i = 0; i < gui_arrlist.size(); i++){
+                    System.out.println(gui_arrlist.get(i));
+                }
                 // 트리에 맞게 그래프에 넣기, 그래프를 arraylist로 저장
 
-                for (int i = 0; i < node_arr.size(); i++) {
+                for (int i = 0; i < gui_arrlist.size(); i++) {
+                    if(gui_arrlist.get(i) == null)
+                        continue;
                     node[i].setText(String.valueOf(gui_arrlist.get(i)));
                 }
                 // 배열을 GUI에 넣기
@@ -191,12 +198,16 @@ public class MainActivity extends AppCompatActivity {
                 t.bfs(gui_arrlist);
                 // 트리에 맞게 그래프에 넣기, 그래프를 arraylist로 저장
 
-                for (int i = 0; i < node_arr.size(); i++) {
-                    node[i].setText(String.valueOf(gui_arrlist.get(i)));
-                    node[i+1].setText("");
+                for(int i = 0; i < node.length; i++) {
+                    node[i].setText(" ");
                 }
-                if(node_arr.size()==0)
-                    node[0].setText("");
+                // 모든 노드 초기화
+
+                for (int i = 0; i < node_arr.size(); i++) {
+                    if(gui_arrlist.get(i) == null)
+                        continue;
+                    node[i].setText(String.valueOf(gui_arrlist.get(i)));
+                }
                 // 배열을 GUI에 넣기
 
             }
