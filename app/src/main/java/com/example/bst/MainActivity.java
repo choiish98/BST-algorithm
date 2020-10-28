@@ -7,14 +7,113 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity {
 
     final ArrayList<Integer> node_arr = new ArrayList<>();
+
+    class Queue<T> {
+        class Node<T> {
+            private T data;
+            private Node<T> next;
+
+            public Node(T data) {
+                this.data = data;
+            }
+        }
+
+        private Node<T> first;
+        private Node<T> last;
+
+        public void enqueue(T item) {
+            Node<T> t = new Node<T>(item);
+
+            if(last != null) {
+                last.next = t;
+            }
+            last = t;
+            if(first == null) {
+                first = last;
+            }
+        }
+
+        public T dequeue() {
+            if (first == null) {
+               throw new NoSuchElementException();
+            }
+
+            T data = first.data;
+            first = first.next;
+
+            if(first == null) {
+                last = null;
+            }
+            return data;
+        }
+
+        public boolean isEmpty() {
+            return first == null;
+        }
+    }
+
+    class Tree {
+        class Node {
+            int data;
+            Node left;
+            Node right;
+            Node() {
+            }
+            Node (int data) {
+                this.data = data;
+            }
+        }
+        Node root;
+        public void makeTree(int[] a) {
+            root = makeTreeR(a, 0, a.length-1);
+        }
+        public Node makeTreeR(int[] a, int start, int end) {
+            if (start > end) return null;
+            int mid = (start + end) / 2;
+            Node node = new Node(a[mid]);
+            node.left = makeTreeR(a, start, mid - 1);
+            node.right = makeTreeR(a, mid + 1, end);
+            return node;
+        }
+        void bfs(ArrayList<Integer> arr) {
+            bfs(0, arr);
+        }
+        void bfs(int index, ArrayList<Integer> arr) {
+            Queue<Node> queue = new Queue<Node>();
+            queue.enqueue(root);
+            while (!queue.isEmpty()) {
+                Node r = queue.dequeue();
+                if(r.left != null) {
+                    queue.enqueue(r.left);
+                }
+                if(r.right != null) {
+                    queue.enqueue(r.right);
+                }
+                if(r.left == null) {
+                    Node null_node = new Node();
+                    queue.enqueue(null_node);
+                }
+                if(r.left == null) {
+                    Node null_node = new Node();
+                    queue.enqueue(null_node);
+                }
+                visit(r.data, arr);
+            }
+        }
+        void visit (int n, ArrayList < Integer > arr){
+            arr.add(n);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +140,28 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 node_arr.add(Integer.parseInt(inputNumber.getText().toString()));
                 Collections.sort(node_arr);
-                // 입력
+                // 입력을 arraylist에 추가
 
+                int[] arr = new int[node_arr.size()];
+                int size = 0;
+                for (int temp : node_arr) {
+                    arr[size++] = temp;
+                }
+                Arrays.sort(arr);
+                // arraylist를 array로 변환
 
-                // 리스트 트리에 맞게 배열에 넣기
+                Tree t = new Tree();
+                t.makeTree(arr);
+                // 배열을 트리로 만들기
+
+                ArrayList<Integer> gui_arrlist = new ArrayList<Integer>();
+                t.bfs(gui_arrlist);
+                // 트리에 맞게 그래프에 넣기, 그래프를 arraylist로 저장
 
                 for (int i = 0; i < node_arr.size(); i++) {
-                    node[i].setText(String.valueOf(node_arr.get(i)));
+                    node[i].setText(String.valueOf(gui_arrlist.get(i)));
                 }
-                // 트리에 넣기
+                // 배열을 GUI에 넣기
             }
         });
 
@@ -64,19 +176,29 @@ public class MainActivity extends AppCompatActivity {
                 Collections.sort(node_arr);
                 // 입력 값과 같은 노드를 삭제
 
+                int[] arr = new int[node_arr.size()];
+                int size = 0;
+                for (int temp : node_arr) {
+                    arr[size++] = temp;
+                }
+                // arraylist를 array로 변환
 
-                // 리스트 트리에 맞게 배열에 넣기
+                Tree t = new Tree();
+                t.makeTree(arr);
+                // 배열을 트리로 만들기
+
+                ArrayList<Integer> gui_arrlist = new ArrayList<Integer>();
+                t.bfs(gui_arrlist);
+                // 트리에 맞게 그래프에 넣기, 그래프를 arraylist로 저장
 
                 for (int i = 0; i < node_arr.size(); i++) {
-                    node[i].setText(String.valueOf(node_arr.get(i)));
-                    if(i==node_arr.size()-1)
-                        node[i+1].setText("");
+                    node[i].setText(String.valueOf(gui_arrlist.get(i)));
+                    node[i+1].setText("");
                 }
-                // 트리에 넣기
-
-                if(node_arr.size() == 0)
+                if(node_arr.size()==0)
                     node[0].setText("");
-                // 0번째 예외 처리
+                // 배열을 GUI에 넣기
+
             }
         });
     }
