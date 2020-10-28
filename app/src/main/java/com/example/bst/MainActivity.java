@@ -88,11 +88,11 @@ public class MainActivity extends AppCompatActivity {
         void bfs(ArrayList<Integer> arr) {
             Queue<Node> queue = new Queue<Node>();
             queue.enqueue(root);
+            Node null_node = new Node(null);
+            null_node.left = null;
+            null_node.right = null;
             while (!queue.isEmpty()) {
                 Node r = queue.dequeue();
-                Node null_node = new Node(null);
-                null_node.left = null;
-                null_node.right = null;
                 if(r.data == null) {
                     arr.add(null);
                     continue;
@@ -100,11 +100,11 @@ public class MainActivity extends AppCompatActivity {
                 if(r.left != null) {
                     queue.enqueue(r.left);
                 }
-                if(r.right != null) {
-                    queue.enqueue(r.right);
-                }
                 if(r.left == null) {
                     queue.enqueue(null_node);
+                }
+                if(r.right != null) {
+                    queue.enqueue(r.right);
                 }
                 if(r.right == null) {
                     queue.enqueue(null_node);
@@ -158,9 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
                 ArrayList<Integer> gui_arrlist = new ArrayList<Integer>();
                 t.bfs(gui_arrlist);
-                for(int i = 0; i < gui_arrlist.size(); i++){
-                    System.out.println(gui_arrlist.get(i));
-                }
                 // 트리에 맞게 그래프에 넣기, 그래프를 arraylist로 저장
 
                 for (int i = 0; i < gui_arrlist.size(); i++) {
@@ -188,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int temp : node_arr) {
                     arr[size++] = temp;
                 }
+                Arrays.sort(arr);
                 // arraylist를 array로 변환
 
                 Tree t = new Tree();
@@ -203,13 +201,12 @@ public class MainActivity extends AppCompatActivity {
                 }
                 // 모든 노드 초기화
 
-                for (int i = 0; i < node_arr.size(); i++) {
+                for (int i = 0; i < gui_arrlist.size(); i++) {
                     if(gui_arrlist.get(i) == null)
                         continue;
                     node[i].setText(String.valueOf(gui_arrlist.get(i)));
                 }
                 // 배열을 GUI에 넣기
-
             }
         });
     }
